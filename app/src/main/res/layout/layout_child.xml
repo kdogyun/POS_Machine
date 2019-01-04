@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp"
+    android:background="#00FF0000"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#EEEEEE"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/option1"
+            android:padding="8dp"
+            android:text="Option 1"
+            android:background="#EEEEEE"
+            android:textColor="#000000"
+            android:textStyle="bold"
+            android:textSize="21dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/buttonChild"
+            android:layout_below="@+id/option1"
+            android:layout_alignParentRight="true"
+            android:layout_width="170dp"
+            android:layout_height="50dp"
+            android:text="환불"
+            android:textSize="20dp" />
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>
