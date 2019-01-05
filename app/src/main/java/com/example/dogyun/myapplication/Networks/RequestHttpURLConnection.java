@@ -1,4 +1,4 @@
-package com.example.dogyun.myapplication;
+package com.example.dogyun.myapplication.Networks;
 
 import android.content.ContentValues;
 import android.util.Log;

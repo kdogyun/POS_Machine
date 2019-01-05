@@ -9,11 +9,11 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.dogyun.myapplication.MainActivity;
-import com.example.dogyun.myapplication.MyPagerAdapter;
+import com.example.dogyun.myapplication.Adapter.MyPagerAdapter;
+import com.example.dogyun.myapplication.Networks.NetworkTask;
 import com.example.dogyun.myapplication.R;
 import com.thoughtbot.expandablerecyclerview.viewholders.ChildViewHolder;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -49,29 +49,26 @@ public class MyChildViewHolder extends ChildViewHolder {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Date date = new Date(System.currentTimeMillis());
-
-                        String url = "http://andomira.com/POS_refund.php";
-                        ContentValues cv = new ContentValues();
-                        cv.put("cago","PLAN_bill");
-                        cv.put("fix", str);
-                        cv.put("type", type);
-                        // AsyncTask를 통해 HttpURLConnection 수행.
-                        NetworkTask networkTask = new NetworkTask(itemView.getContext(), url, cv);
-
-                        try {
-                            networkTask.execute();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                        MainActivity.dbHelper.refundBill(str, type);
+//                        String url = MainActivity.siteURL + "POS_refund.php";
+//                        ContentValues cv = new ContentValues();
+//                        cv.put("cago","PLAN_bill");
+//                        cv.put("fix", str);
+//                        cv.put("type", type);
+//                        // AsyncTask를 통해 HttpURLConnection 수행.
+//                        NetworkTask networkTask = new NetworkTask(itemView.getContext(), url, cv);
+//
+//                        try {
+//                            networkTask.execute();
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
                         dialog.dismiss();     //닫기
                         // Event
 
-                        MainActivity.arraBillHistory.clear();
-                        MainActivity.arraBillChart.clear();
-                        MainActivity.GetBillChart.getJson();
-                        MainActivity.GetBillHistory.getJson();
-                        MyPagerAdapter.historyFragment.firstBill();
-                        MyPagerAdapter.ChartFragment.chartFirstHour(MyPagerAdapter.ChartFragment.chart1, MyPagerAdapter.ChartFragment.chart2);
+                        MainActivity.getBill();
+                        MyPagerAdapter.historyFragment.historyFirstDraw();
+                        MyPagerAdapter.chartFragment.chartFirstDraw();
                     }
                 });
 

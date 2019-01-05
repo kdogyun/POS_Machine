@@ -1,39 +1,26 @@
 package com.example.dogyun.myapplication;
 
 import android.Manifest;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.dogyun.myapplication.Bill.BillType;
-import com.example.dogyun.myapplication.Bill.GetBill;
-import com.example.dogyun.myapplication.dummy.DummyContent;
-import com.github.mikephil.charting.charts.LineChart;
+import com.example.dogyun.myapplication.Adapter.MyPagerAdapter;
+import com.example.dogyun.myapplication.Models.BillType;
+import com.example.dogyun.myapplication.Models.Category;
+import com.example.dogyun.myapplication.Models.itemList;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
 
     public static DBHelper dbHelper;
     SharedPreferences prefs;
-    public static Date date;
+    final public static String siteURL = "http://andomira.com/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,24 +52,20 @@ public class MainActivity extends AppCompatActivity {
         boolean isFirstRun = prefs.getBoolean("isFirstRun",true);
         if(isFirstRun)
         {
-            dbHelper.doFirst();
+            //dbHelper.doFirst();
             prefs.edit().putBoolean("isFirstRun",false).apply();
+            new Plan();
         }
 
 
         //------------------------------------------------------------
         // 필요한 목록 셋팅
-        names = new ArrayList<>();
-        items = MainActivity.dbHelper.getResult();
-
-        date = new Date(System.currentTimeMillis());
-        String dateF = new SimpleDateFormat("yyyy-MM-dd").format(date);
-        arraBillChart = new ArrayList<>();
-        arraBillHistory = new ArrayList<>();
-        GetBillChart = new GetBill(this,arraBillChart,dateF);
-        GetBillHistory = new GetBill(this,arraBillHistory,dateF);
-        GetBillChart.getJson();
-        GetBillHistory.getJson();
+        menu = new ArrayList<>();
+        bill = new ArrayList<>();
+        category = new ArrayList<>();
+        getMenu();
+        getBill();
+        getCategory();
 
         //------------------------------------------------------------
         //페이저 실행
@@ -112,10 +95,19 @@ public class MainActivity extends AppCompatActivity {
         th.start();*/
     }
 
-    public static HashMap<String, String> items; //메뉴판 - 이름,가격
-    public static ArrayList<String> names; //메뉴목록 - 이름
-    public static GetBill GetBillHistory;
-    public static GetBill GetBillChart;
-    public static ArrayList<BillType> arraBillChart;
-    public static ArrayList<BillType> arraBillHistory;
+    public static ArrayList<itemList> menu;
+    public static ArrayList<BillType> bill;
+    public static ArrayList<Category> category;
+
+    public static void getMenu() {
+        dbHelper.getMenu(menu);
+    }
+
+    public static void getBill() {
+        dbHelper.getBill(bill);
+    }
+
+    public static void getCategory() {
+        dbHelper.getCategoy(category);
+    }
 }

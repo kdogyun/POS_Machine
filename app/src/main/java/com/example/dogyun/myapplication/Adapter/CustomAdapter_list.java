@@ -1,12 +1,14 @@
-package com.example.dogyun.myapplication;
+package com.example.dogyun.myapplication.Adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.example.dogyun.myapplication.R;
+import com.example.dogyun.myapplication.Models.itemList;
 
 import java.util.ArrayList;
 

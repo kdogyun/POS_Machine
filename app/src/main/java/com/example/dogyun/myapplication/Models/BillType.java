@@ -1,4 +1,4 @@
-package com.example.dogyun.myapplication.Bill;
+package com.example.dogyun.myapplication.Models;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -8,9 +8,10 @@ import java.util.Date;
  */
 
 public class BillType {
-    public Date date;
+    public String date;
     public ArrayList<String> name;
     public ArrayList<String> count;
+    public ArrayList<String> price;
     public int total;
     public String type;
 }

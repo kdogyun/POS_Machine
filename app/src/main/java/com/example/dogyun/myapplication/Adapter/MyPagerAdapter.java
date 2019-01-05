@@ -1,9 +1,14 @@
-package com.example.dogyun.myapplication;
+package com.example.dogyun.myapplication.Adapter;
 
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+
+import com.example.dogyun.myapplication.ChartFragment;
+import com.example.dogyun.myapplication.ColorFragment;
+import com.example.dogyun.myapplication.HistoryFragment;
+import com.example.dogyun.myapplication.ThirdFragment;
 
 import java.util.ArrayList;
 
@@ -15,17 +20,18 @@ public class MyPagerAdapter extends FragmentPagerAdapter {
 
     private ArrayList<Fragment> mData;
     public static HistoryFragment historyFragment = new HistoryFragment();
-    public static ChartFragment ChartFragment = new ChartFragment();
-    public static ColorFragment ColorFragment = new ColorFragment();
+    public static ChartFragment chartFragment = new ChartFragment();
+    public static ColorFragment colorFragment = new ColorFragment();
+    public static ThirdFragment thirdFragment = new ThirdFragment();
 
     public MyPagerAdapter(FragmentManager fm) {
         super(fm);
 
         mData = new ArrayList<>();
-        mData.add(new ThirdFragment());
+        mData.add(thirdFragment);
         mData.add(historyFragment);
-        mData.add(ColorFragment);
-        mData.add(ChartFragment);
+        mData.add(colorFragment);
+        mData.add(chartFragment);
     }
 
     @Override

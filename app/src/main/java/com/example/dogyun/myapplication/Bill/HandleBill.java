@@ -1,13 +1,14 @@
 package com.example.dogyun.myapplication.Bill;
 
-import android.util.Log;
-
-import com.example.dogyun.myapplication.ColorFragment;
+import com.example.dogyun.myapplication.DateCalculate;
 import com.example.dogyun.myapplication.MainActivity;
+import com.example.dogyun.myapplication.Models.BillType;
+import com.example.dogyun.myapplication.Models.itemList;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Date;
 
 /**
  * Created by dogyun on 2018-09-27.
@@ -15,7 +16,7 @@ import java.util.HashMap;
 
 public class HandleBill {
 
-    ArrayList<String> name;
+    ArrayList<itemList> menu;
     ArrayList<Integer> count;
     ArrayList<Integer> cash;
     ArrayList<Integer> card;
@@ -27,12 +28,12 @@ public class HandleBill {
         this.cash = cash;
         this.card = card;
         this.total = total;
-        this.name = MainActivity.names;
+        this.menu = MainActivity.menu;
         this.ab = ab;
     }
 
     public void HandleBill_count(){
-        for(int i = 0; i<name.size(); i++){
+        for(int i = 0; i<menu.size(); i++){
             count.add(0);
         }
 
@@ -41,7 +42,11 @@ public class HandleBill {
             int i=0;
 
             for(String s : bt.name){
-                int pos = name.indexOf(s);
+                int pos = -1;
+                for(itemList il : menu){
+                    pos++;
+                    if(il.name.equals(s)) break;
+                }
 
                 if(bt.type.equals("현금_환불")) {
                 }
@@ -62,7 +67,7 @@ public class HandleBill {
         }
 
         for(BillType bt : ab){
-            int hour = Integer.parseInt(new SimpleDateFormat("HH").format(bt.date))-10;
+            int hour = Integer.parseInt(new SimpleDateFormat("HH").format(DateCalculate.stringDate(bt.date)))-10;
             if(bt.type.equals("현금")){
                 cash.set(hour, cash.get(hour) + bt.total);
                 total.set(hour, total.get(hour) + bt.total);
@@ -70,10 +75,6 @@ public class HandleBill {
             else if(bt.type.equals("카드")) {
                 card.set(hour, card.get(hour) + bt.total);
                 total.set(hour, total.get(hour) + bt.total);
-            }
-            else if(bt.type.equals("현금_환불")) {
-            }
-            else {
             }
         }
     }

@@ -1,4 +1,4 @@
-package com.example.dogyun.myapplication;
+package com.example.dogyun.myapplication.Adapter;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.example.dogyun.myapplication.Models.ChildList;
 import com.example.dogyun.myapplication.Models.ParentList;
+import com.example.dogyun.myapplication.R;
 import com.example.dogyun.myapplication.ViewHolders.MyChildViewHolder;
 import com.example.dogyun.myapplication.ViewHolders.MyParentViewHolder;
 import com.thoughtbot.expandablerecyclerview.ExpandableRecyclerViewAdapter;

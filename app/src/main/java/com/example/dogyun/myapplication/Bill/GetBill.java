@@ -2,18 +2,16 @@ package com.example.dogyun.myapplication.Bill;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.util.Log;
 
-import com.example.dogyun.myapplication.ViewHolders.NetworkTask;
+import com.example.dogyun.myapplication.MainActivity;
+import com.example.dogyun.myapplication.Models.BillType;
+import com.example.dogyun.myapplication.Networks.NetworkTask;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * Created by dogyun on 2018-09-27.
@@ -48,7 +46,7 @@ public class GetBill{
     }
 
     public void getJson(){
-        String url = "http://andomira.com/POS_billg.php";
+        String url =  MainActivity.siteURL + "POS_billg.php";
         ContentValues cv = new ContentValues();
         cv.put("cago","PLAN_bill");
         cv.put("date", date);
@@ -72,14 +70,16 @@ public class GetBill{
             for (int i = 0; i < index.length(); i++) {
                 JSONObject tt = index.getJSONObject(i);
                 BillType bt = new BillType();
+                /*
                 try {
-                    bt.date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss E").parse(tt.getString("date") + " 월"); //배포용
+                    //bt.date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss E").parse(tt.getString("date") + " 월"); //배포용
                 } catch(ParseException e){
                     try{
-                    bt.date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss E").parse(tt.getString("date") + " Thu"); //에뮬용
+                    //bt.date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss E").parse(tt.getString("date") + " Thu"); //에뮬용
                     } catch(ParseException e1){}
                     //e.printStackTrace();
                 }
+                */
                 bt.name = parserString(tt.getString("name"));
                 bt.count = parserString(tt.getString("count"));
                 bt.total = tt.getInt("total");

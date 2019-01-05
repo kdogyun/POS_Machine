@@ -1,11 +1,9 @@
-package com.example.dogyun.myapplication.ViewHolders;
+package com.example.dogyun.myapplication.Networks;
 
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.os.AsyncTask;
-
-import com.example.dogyun.myapplication.RequestHttpURLConnection;
 
 /**
  * Created by dogyun on 2018-09-27.

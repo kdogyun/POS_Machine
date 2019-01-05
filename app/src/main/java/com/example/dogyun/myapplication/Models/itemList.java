@@ -1,4 +1,4 @@
-package com.example.dogyun.myapplication;
+package com.example.dogyun.myapplication.Models;
 
 /**
  * Created by dogyun on 2018-08-25.
@@ -6,7 +6,7 @@ package com.example.dogyun.myapplication;
 
 public class itemList {
     public String name;
-    public String price;
+    public int price;
     public int count;
-    public String image;
+    public int category;
 }

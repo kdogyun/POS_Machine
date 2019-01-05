@@ -3,22 +3,17 @@ package com.example.dogyun.myapplication;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CalendarView;
 import android.widget.DatePicker;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.dogyun.myapplication.Bill.BillType;
 import com.example.dogyun.myapplication.Bill.GetBill;
 import com.example.dogyun.myapplication.Bill.HandleBill;
-import com.github.mikephil.charting.charts.BarChart;
+import com.example.dogyun.myapplication.Models.BillType;
+import com.example.dogyun.myapplication.Models.itemList;
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
@@ -30,53 +25,44 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.GregorianCalendar;
 
 /**
  * Created by dogyun on 2018-09-05.
  */
 
+//----------------------
+//판매량 차트 화면
+//----------------------
 public class ChartFragment extends Fragment {
 
-    ArrayList<String> name;
-    ArrayList<BillType> arraBill;
-    public static GetBill GetBill;
+    ArrayList<itemList> menu = MainActivity.menu;
+    ArrayList<BillType> wantBill;
     public static ArrayList<Integer> count;
     public static ArrayList<Integer> cash;
     public static ArrayList<Integer> card;
     public static ArrayList<Integer> total;
-    ArrayList<LineChart> arrayChart;
     HandleBill hb;
     int flag;
 
 
     public ChartFragment() {
-        name = MainActivity.names;
-        arraBill = MainActivity.arraBillChart;
-        GetBill = MainActivity.GetBillChart;
         count = new ArrayList<Integer>();
         cash = new ArrayList<Integer>();
         card = new ArrayList<Integer>();
         total = new ArrayList<Integer>();
-        //arrayChart =
-        hb = new HandleBill(arraBill, count, cash, card, total);
+        wantBill = new ArrayList<>();
+        hb = new HandleBill(wantBill, count, cash, card, total);
         flag = 0;
 
         GregorianCalendar calendar = new GregorianCalendar();
-        yearS = calendar.get(Calendar.YEAR);
-        monthS = calendar.get(Calendar.MONTH);
-        dayS= calendar.get(Calendar.DAY_OF_MONTH);
-        yearE = yearS;
-        monthE = monthS;
-        dayE= dayS;
+        dateS = calendar;
+        dateE = calendar;
     }
 
-    public static int yearS, monthS, dayS, yearE, monthE, dayE; //날짜 컨트롤
+    GregorianCalendar dateS, dateE;
     TextView tv6, tv8, chart11, chart12, chart13, chart21, chart22, chart23;
     public static LineChart chart1, chart2;
-
-    String date;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -95,25 +81,22 @@ public class ChartFragment extends Fragment {
         chart1 = (LineChart) rootView.findViewById(R.id.chart1);
         chart2 = (LineChart) rootView.findViewById(R.id.chart2);
 
-        tv6.setText(yearS+" / "+(monthS+1)+" / "+dayS);
-        tv8.setText(yearS+" / "+(monthS+1)+" / "+dayS);
-
         tv6.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new DatePickerDialog(getActivity(), dateSetListenerS, yearS, monthS, dayS).show();
+                new DatePickerDialog(getActivity(), dateSetListenerS, dateS.get(Calendar.YEAR), dateS.get(Calendar.MONTH), dateS.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
 
         tv8.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new DatePickerDialog(getActivity(), dateSetListenerE, yearE, monthE, dayE).show();
+                new DatePickerDialog(getActivity(), dateSetListenerE, dateE.get(Calendar.YEAR), dateE.get(Calendar.MONTH), dateE.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
 
         if(flag == 0) {
-            chartFirstHour(chart1, chart2);
+            chartFirstDraw();
             flag = 1;
         }else{
             chartDraw();
@@ -144,6 +127,9 @@ public class ChartFragment extends Fragment {
     }
 
     public void chartHour(LineChart lc1, LineChart lc2){
+
+        tv6.setText(DateCalculate.date(dateS));
+        tv8.setText(DateCalculate.date(dateE));
 
         //------------------------------------------------------------------------------------------
         //차트1 - 현금, 카드 계산 //시간별..
@@ -198,6 +184,7 @@ public class ChartFragment extends Fragment {
 
         //------------------------------------------------------------------------------------------
         //차트2 - 메뉴별 판매량 //메뉴별..
+        //이거 왜 최신화가 안되지? 메뉴 2개만 팔리면,,, 나머지 하나가 1등메뉴로 다 된다;; 계산해야지 바뀜;;
         //------------------------------------------------------------------------------------------
         LineChart lineChart2 = lc2;
 
@@ -209,15 +196,20 @@ public class ChartFragment extends Fragment {
         for(Integer x : count){
             if(x != 0){
                 entries2.add(new Entry(i++, (float) x));
-                labels2.add(name.get(c));
+                labels2.add(menu.get(c).name);
             }
             c++;
         }
 
         if(i==0){
             for(int e = 0; e<5; e++){
-                entries2.add(new Entry(e, 0));
-                labels2.add(name.get(e));
+                try {
+                    labels2.add(menu.get(e).name);
+                    entries2.add(new Entry(e, 0));
+                }catch (IndexOutOfBoundsException e1){
+                    labels2.add("자료없음");
+                    entries2.add(new Entry(e, 0));
+                }
             }
         }
 
@@ -290,14 +282,18 @@ public class ChartFragment extends Fragment {
         Collections.sort(a);
 
         for(int x=1;x<4;x++){
-            i[x-1] = a.get(a.size()-x);
+            try {
+                i[x - 1] = a.get(a.size() - x);
+            }catch (ArrayIndexOutOfBoundsException e){
+                i[x - 1] = 0;
+            }
         }
 
         if(i[0]==0){
             for(int x=1;x<4;x++){
-            String str = "자료가 없어요..ㅠ";
-            s.add(str);
-        }
+                String str = "자료가 없어요..ㅠ";
+                s.add(str);
+            }
         } else{
             p[0] = a2.indexOf(i[0]);
             a2.set(p[0],0);
@@ -306,7 +302,7 @@ public class ChartFragment extends Fragment {
             p[2] = a2.indexOf(i[2]);
 
             for(int x=1;x<4;x++){
-                String str = "" + x + "등\t\t" + name.get(p[x-1]) + " " + al.get(p[x-1]) + "개";
+                String str = "" + x + "등\t\t" + menu.get(p[x-1]).name + " " + al.get(p[x-1]) + "개";
                 s.add(str);
             }
         }
@@ -382,31 +378,23 @@ public class ChartFragment extends Fragment {
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear,int dayOfMonth) {
             // TODO Auto-generated method stub
-            yearS = year;
-            monthS = monthOfYear;
-            dayS = dayOfMonth;
-            yearE = year;
-            monthE = monthOfYear;
-            dayE = dayOfMonth;
+            GregorianCalendar calendar = new GregorianCalendar(year, monthOfYear, dayOfMonth);
+            dateS = calendar;
 
-            tv6.setText(yearS+" / "+(monthS+1)+" / "+dayS);
-            tv8.setText(yearE+" / "+(monthE+1)+" / "+dayE);
-
-            if((monthS+1)<10) {
-                if(dayS<10) date = yearS + "-0" + (monthS+1) + "-0" + dayS;
-                else date = yearS + "-0" + (monthS+1) + "-" + dayS;
-            }
-            else {
-                if(dayS<10) date = yearS + "-" + (monthS+1) + "-0" + dayS;
-                else date = yearS + "-" + (monthS+1) + "-" + dayS;
-            }
-            chartFirstDraw(date);
+            chartFirstDraw();
         }
     };
 
-    public void chartFirstDraw(String str){
-        arraBill.clear();
-        GetBill.setDate(str); GetBill.getJson();
+    public void chartFirstDraw(){
+        wantBill.clear();
+        int term = DateCalculate.between(dateS, dateE);
+        for(int i=0; i<=term; i++) {
+            for (BillType bt : MainActivity.bill) {
+                if (bt.date.contains(DateCalculate.dateAdd(dateS, i))) {
+                    wantBill.add(bt);
+                }
+            }
+        }
         chartFirstHour(chart1, chart2);
     }
 
@@ -414,11 +402,10 @@ public class ChartFragment extends Fragment {
         @Override
         public void onDateSet(DatePicker view, int year, int monthOfYear,int dayOfMonth) {
             // TODO Auto-generated method stub
-            yearE = year;
-            monthE = monthOfYear;
-            dayE = dayOfMonth;
+            GregorianCalendar calendar = new GregorianCalendar(year, monthOfYear, dayOfMonth);
+            dateE = calendar;
 
-            tv8.setText(yearE+" / "+(monthE+1)+" / "+dayE);
+            chartFirstDraw();
         }
     };
 }
